@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES5", // 指定ecmaScript目标版本
+    "lib": ["es6", "dom"],
+    "sourceMap": true,
+    "esModuleInterop": true,
+    // "module": "commonjs", // 指定生成哪个模块系统代码
+    "allowJs": true, // 允许编译js文件
+    "jsx": "react-jsx", // 支持JSX
+    "outDir": "build", // 编译输出目录
+    "strict": true, // 启用所有严格类型检查选项
+    "noImplicitAny": false, // 在表达式和声明上有隐含的any类型时报错
+    "skipLibCheck": true, // 忽略所有声明文件的类型检查
+    // "forceConsistentCasingInFileNames": true // 禁止对同一文件的不一致的引用
+  },
+  "include": ["pages/**/*"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist"
+  ]
+}

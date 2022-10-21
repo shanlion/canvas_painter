@@ -1,0 +1,36 @@
+.tool-bar{
+  position: fixed;
+  left: 20px;
+  top: 50px;
+}
+.tool-bar-item{
+  line-height: 32px;
+  cursor: pointer;
+}
+.tool-bar-item:hover{
+  color: #017FFD;
+}
+.tippy-content{
+  border: 1px solid #EBEBEB;
+  box-shadow: 0px 2px 16px rgba(81, 90, 86, 0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+}
+.hue-picker {
+  margin-top: 30px;
+}
+.shape-popover .tippy-content{
+  min-width: 300px;
+  color: #1B2532;
+}
+.shape-popover .shape-wrap span{
+  margin-right: 20px;
+}
+.shape-popover .shape-wrap span:hover{
+  color: #017FFD;
+}
+
+.flow-wrap span{
+  margin-right: 20px;
+}

@@ -219,14 +219,6 @@ export function drawFigure(options?: any) {
     singlePathData = [];
     console.log(pathData, 'pathData')
   }
-  function arrowDraw(x1, x2, y1, y2) {
-    var l = 20;
-    var a = Math.atan2((y2 - y1), (x2 - x1));
-    var x3 = x2 - l * Math.cos(a + 30 * Math.PI / 180);
-    var y3 = y2 - l * Math.sin(a + 30 * Math.PI / 180);
-    var x4 = x2 - l * Math.cos(a - 30 * Math.PI / 180);
-    var y4 = y2 - l * Math.sin(a - 30 * Math.PI / 180);
-  }
   useEffect(() => {
     if (!document.getElementById('drawCanvas')) {
       return

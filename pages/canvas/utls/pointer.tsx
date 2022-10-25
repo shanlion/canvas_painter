@@ -1,6 +1,7 @@
 
 import {useEffect} from 'react';
 import {useCanvasConfig} from '../context';
+import websocketManager from '../../../webSocket/client';
 
 export function drawFigure(options?: any) {
   let ctx;
@@ -24,21 +25,38 @@ export function drawFigure(options?: any) {
     };
   
   }
-  
-  function undo() {
-    pathData.pop();
+  function drawAll(userPathData) {
     let canvasDom: any = document.getElementById('drawCanvas');
     let curCtx = canvasDom!.getContext('2d');
     let rect = canvasDom!.getBoundingClientRect();
     curCtx.clearRect(rect.x, rect.y, rect.width, rect.height);
-    pathData.map(item => {
-      if (Object.prototype.toString.call(item) === '[object Array]') {
-        item.map(info => draw(info, curCtx))
-      } else {
-        flowDraw(item, curCtx)
+    for (const key in userPathData) {
+      if (Object.prototype.hasOwnProperty.call(userPathData, key)) {
+        const pathData = userPathData[key];
+        pathData.map(item => {
+          if (Object.prototype.toString.call(item) === '[object Array]') {
+            item.map(info => draw(info, curCtx))
+          } else {
+            flowDraw(item, curCtx)
+          }
+        })
       }
-      
-    })
+    }
+  }
+  function undo() {
+    pathData.pop();
+    websocketManager.getInstance().sendMessage(pathData)
+    // let canvasDom: any = document.getElementById('drawCanvas');
+    // let curCtx = canvasDom!.getContext('2d');
+    // let rect = canvasDom!.getBoundingClientRect();
+    // curCtx.clearRect(rect.x, rect.y, rect.width, rect.height);
+    // pathData.map(item => {
+    //   if (Object.prototype.toString.call(item) === '[object Array]') {
+    //     item.map(info => draw(info, curCtx))
+    //   } else {
+    //     flowDraw(item, curCtx)
+    //   }
+    // })
   }
   function draw(pathInfo, curCtx?: any) {
     let useCtx = curCtx ? curCtx : ctx;
@@ -189,7 +207,7 @@ export function drawFigure(options?: any) {
     if (mouseButtonDown && !config.flowType) {
       let singleData = {beginX: lastPt.x, beginY: lastPt.y, lastX: event.pageX, lastY: event.pageY, strokeStyle: config.strokeStyle, lineWidth: config.lineWidth, drawType: config.drawType, flowType: config.flowType};
       singlePathData.push(singleData)
-      draw(singleData)
+      // draw(singleData)
       lastPt = {
         x: event.pageX,
         y: event.pageY
@@ -214,10 +232,13 @@ export function drawFigure(options?: any) {
       var tempCanvasDom = document.getElementById("temp");
       tempCanvasDom?.parentNode?.removeChild(tempCanvasDom);
     } else {
-      pathData.push(singlePathData)
+      if (singlePathData.length > 0) {
+        pathData.push(singlePathData)
+      }
+      
     }
     singlePathData = [];
-    console.log(pathData, 'pathData')
+    websocketManager.getInstance().sendMessage(pathData)
   }
   useEffect(() => {
     if (!document.getElementById('drawCanvas')) {
@@ -235,7 +256,10 @@ export function drawFigure(options?: any) {
         canvas.addEventListener('mouseup', handleMouseUp, false);
       }
     });
-    
+    websocketManager.getInstance().createWebSocket(drawAll);
+    return () => {
+      websocketManager.getInstance().closeWebSocket()
+    }
   }, [])
   return {undo}
 }

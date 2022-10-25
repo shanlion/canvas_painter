@@ -13,7 +13,7 @@
     "skipLibCheck": true, // 忽略所有声明文件的类型检查
     // "forceConsistentCasingInFileNames": true // 禁止对同一文件的不一致的引用
   },
-  "include": ["pages/**/*"],
+  "include": ["pages/**/*", "webSocket"],
   "exclude": [
     "node_modules",
     "build",

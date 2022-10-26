@@ -43,20 +43,23 @@ export function drawFigure(options?: any) {
       }
     }
   }
+  function clientDraw(pathData) {
+    let canvasDom: any = document.getElementById('drawCanvas');
+    let curCtx = canvasDom!.getContext('2d');
+    let rect = canvasDom!.getBoundingClientRect();
+    curCtx.clearRect(rect.x, rect.y, rect.width, rect.height);
+    pathData.map(item => {
+      if (Object.prototype.toString.call(item) === '[object Array]') {
+        item.map(info => draw(info, curCtx))
+      } else {
+        flowDraw(item, curCtx)
+      }
+    })
+  }
   function undo() {
     pathData.pop();
-    websocketManager.getInstance().sendMessage(pathData)
-    // let canvasDom: any = document.getElementById('drawCanvas');
-    // let curCtx = canvasDom!.getContext('2d');
-    // let rect = canvasDom!.getBoundingClientRect();
-    // curCtx.clearRect(rect.x, rect.y, rect.width, rect.height);
-    // pathData.map(item => {
-    //   if (Object.prototype.toString.call(item) === '[object Array]') {
-    //     item.map(info => draw(info, curCtx))
-    //   } else {
-    //     flowDraw(item, curCtx)
-    //   }
-    // })
+    clientDraw(pathData)
+    // websocketManager.getInstance().sendMessage(pathData)
   }
   function draw(pathInfo, curCtx?: any) {
     let useCtx = curCtx ? curCtx : ctx;
@@ -207,7 +210,7 @@ export function drawFigure(options?: any) {
     if (mouseButtonDown && !config.flowType) {
       let singleData = {beginX: lastPt.x, beginY: lastPt.y, lastX: event.pageX, lastY: event.pageY, strokeStyle: config.strokeStyle, lineWidth: config.lineWidth, drawType: config.drawType, flowType: config.flowType};
       singlePathData.push(singleData)
-      // draw(singleData)
+      draw(singleData)
       lastPt = {
         x: event.pageX,
         y: event.pageY
@@ -256,10 +259,10 @@ export function drawFigure(options?: any) {
         canvas.addEventListener('mouseup', handleMouseUp, false);
       }
     });
-    websocketManager.getInstance().createWebSocket(drawAll);
-    return () => {
-      websocketManager.getInstance().closeWebSocket()
-    }
+    // websocketManager.getInstance().createWebSocket(drawAll);
+    // return () => {
+    //   websocketManager.getInstance().closeWebSocket()
+    // }
   }, [])
   return {undo}
 }

@@ -6,6 +6,7 @@ import ShapePopover from './ShapePopover';
 import EraserPopover from './EraserPopover';
 import FlowPopover from './FlowPopover';
 import {ImgPreview} from '../PreImage/index'
+import Tippy from '@tippyjs/react';
 
 interface IToolBarProps{
   undo: Function
@@ -16,13 +17,16 @@ export default function ToolBar(props: IToolBarProps) {
   useEffect(() => {
     descriptorsFunc = new descriptors();
   }, [])
-  const onFinish = () => {
-    console.log(descriptorsFunc.toImageUrl())
-    let url = descriptorsFunc.toImageUrl()
+  const onFinish = async () => {
+    let url = await descriptorsFunc.toImageUrl();
+    console.log(url, 'url')
     setImgUrl(url)
   }
   const onClear = () => {
     descriptorsFunc.clear()
+  }
+  const onShare = (type: string) => {
+    descriptorsFunc.share(type)
   }
   return <div className="tool-bar">
     <div className='tool-bar-item' onClick={() => onClear()}>清空</div>
@@ -40,6 +44,20 @@ export default function ToolBar(props: IToolBarProps) {
     </div>
     <div className='tool-bar-item' onClick={() => props.undo()}>撤销</div>
     <div className='tool-bar-item' onClick={() => onFinish()}>完成</div>
+    <div className='tool-bar-item'>
+      <Tippy
+        className='shape-popover'
+        trigger="click"
+        placement="right"
+        interactive={true}
+        content={<div className='flow-wrap'>
+          <span onClick={() => onShare('link')}>分享链接</span>
+          <span onClick={() => onShare('file')}>分享图片</span>
+        </div>}
+      >
+        <span>分享</span>
+      </Tippy>
+    </div>
     {imgUrl && <ImgPreview imgUrl={imgUrl}/>}
   </div>
 }

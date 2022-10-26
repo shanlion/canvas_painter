@@ -7,6 +7,7 @@ export function drawFigure(options?: any) {
   let crayonImage = new Image();
   let dpr = window.devicePixelRatio || 1;
   // crayonImage.src = "../images/crayon-bg.png";
+  crayonImage.crossOrigin = '';
   crayonImage.src = 'https://raw.githubusercontent.com/williammalone/Simple-HTML5-Drawing-App/master/images/crayon-texture.png'
   const {config, pathData} = useCanvasConfig();
   function initCanvas(callback) {

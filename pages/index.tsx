@@ -9,9 +9,9 @@ const Index = () => {
   </CanvasProvider>
 }
 const CanvasProviderDom = () => {
-  const {undo} = drawFigure()
+  const operation = drawFigure()
   return <div>
-      <ToolBar undo={undo}/>
+      <ToolBar {...operation}/>
       <canvas className='canvas' id="drawCanvas"></canvas>
     </div>
 }

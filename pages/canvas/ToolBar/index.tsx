@@ -9,27 +9,24 @@ import {ImgPreview} from '../PreImage/index'
 import Tippy from '@tippyjs/react';
 
 interface IToolBarProps{
-  undo: Function
+  undo: Function;
+  clear: Function;
 }
 export default function ToolBar(props: IToolBarProps) {
   let descriptorsFunc;
   const [imgUrl, setImgUrl] = useState('');
   useEffect(() => {
     descriptorsFunc = new descriptors();
-  }, [])
-  const onFinish = async () => {
-    let url = await descriptorsFunc.toImageUrl();
-    console.log(url, 'url')
+  })
+  const onFinish = () => {
+    let url = descriptorsFunc.toImageUrl();
     setImgUrl(url)
-  }
-  const onClear = () => {
-    descriptorsFunc.clear()
   }
   const onShare = (type: string) => {
     descriptorsFunc.share(type)
   }
   return <div className="tool-bar">
-    <div className='tool-bar-item' onClick={() => onClear()}>清空</div>
+    <div className='tool-bar-item' onClick={() => props.clear()}>清空</div>
     <div className='tool-bar-item'>
       <ColorSizePopover text='笔刷样式'/>
     </div>
